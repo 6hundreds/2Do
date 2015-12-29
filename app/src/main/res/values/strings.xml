@@ -4,4 +4,19 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings_show_splash">Show splash</string>
+
+    <string name="current_task_tab">Current</string>
+    <string name="done_task_tab">Done</string>
+
+    <string name="dialog_title">Adding task</string>
+    <string name="dialog_empty_title_error">Please, enter the title</string>
+    
+    <string name="hint_task_title">Title</string>
+    <string name="hint_task_date">Date</string>
+    <string name="hint_task_time">Time</string>
+
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+
+
 </resources>

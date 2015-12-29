@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.six_hundreds.todo.fragment.SplashFragment">
+    tools:context="com.six_hundreds.todo.fragment.SplashFragment"
+    android:background="@color/text_white">
 
     <ImageView
         android:layout_width="wrap_content"
