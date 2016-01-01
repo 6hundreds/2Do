@@ -17,12 +17,20 @@ import android.widget.Toast;
 
 import com.six_hundreds.todo.adapter.TabAdapter;
 import com.six_hundreds.todo.dialog.AddingDialogTaskFragment;
+import com.six_hundreds.todo.fragment.CurrentTaskFragment;
+import com.six_hundreds.todo.fragment.DoneTaskFragment;
 import com.six_hundreds.todo.fragment.SplashFragment;
+import com.six_hundreds.todo.model.ModelTask;
 
 public class MainActivity extends AppCompatActivity implements AddingDialogTaskFragment.AddingTaskListener{
 
     FragmentManager fragmentManager;
     PreferencesHelper preferencesHelper;
+
+    TabAdapter tabAdapter;
+
+    CurrentTaskFragment currentTaskFragment;
+    DoneTaskFragment doneTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements AddingDialogTaskF
         tabLayout.addTab(tabLayout.newTab().setText(R.string.done_task_tab));
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        TabAdapter tabAdapter = new TabAdapter(fragmentManager,2);
+        tabAdapter = new TabAdapter(fragmentManager,2);
 
         viewPager.setAdapter(tabAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -105,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements AddingDialogTaskF
             }
         });
 
+        currentTaskFragment = (CurrentTaskFragment) tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
+        doneTaskFragment = (DoneTaskFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +129,8 @@ public class MainActivity extends AppCompatActivity implements AddingDialogTaskF
 
 
     @Override
-    public void onTaskAdded() {
+    public void onTaskAdded(ModelTask newTask) {
+        currentTaskFragment.addTask(newTask);
         Toast.makeText(MainActivity.this, "Task added", Toast.LENGTH_SHORT).show();
     }
 
