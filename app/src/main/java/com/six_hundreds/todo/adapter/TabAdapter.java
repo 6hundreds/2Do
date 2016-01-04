@@ -3,10 +3,9 @@ package com.six_hundreds.todo.adapter;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 
 import com.six_hundreds.todo.fragment.CurrentTaskFragment;
-import com.six_hundreds.todo.fragment.DoneTaskFragment;
+import com.six_hundreds.todo.fragment.DoneTasksFragment;
 
 /**
  * Created by six_hundreds on 26.12.15.
@@ -19,13 +18,13 @@ public class TabAdapter extends FragmentStatePagerAdapter {
     public static final int DONE_TASK_FRAGMENT_POSITION = 1;
 
     private CurrentTaskFragment currentTaskFragment;
-    private DoneTaskFragment doneTaskFragment;
+    private DoneTasksFragment doneTasksFragment;
 
     public TabAdapter(FragmentManager fm, int numberOfTabs) {
         super(fm);
         this.numberOfTabs = numberOfTabs;
         currentTaskFragment = new CurrentTaskFragment();
-        doneTaskFragment = new DoneTaskFragment();
+        doneTasksFragment = new DoneTasksFragment();
     }
 
 
@@ -36,7 +35,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return currentTaskFragment;
             case 1 :
-                return doneTaskFragment;
+                return doneTasksFragment;
             default:
                 return null;
         }

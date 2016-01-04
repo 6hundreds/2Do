@@ -16,26 +16,35 @@ import android.widget.Toast;
 
 
 import com.six_hundreds.todo.adapter.TabAdapter;
+import com.six_hundreds.todo.database.DBHelper;
 import com.six_hundreds.todo.dialog.AddingDialogTaskFragment;
 import com.six_hundreds.todo.fragment.CurrentTaskFragment;
-import com.six_hundreds.todo.fragment.DoneTaskFragment;
+import com.six_hundreds.todo.fragment.DoneTasksFragment;
 import com.six_hundreds.todo.fragment.SplashFragment;
+import com.six_hundreds.todo.fragment.TasksFragment;
 import com.six_hundreds.todo.model.ModelTask;
 
-public class MainActivity extends AppCompatActivity implements AddingDialogTaskFragment.AddingTaskListener{
+public class MainActivity extends AppCompatActivity
+        implements AddingDialogTaskFragment.AddingTaskListener,
+        CurrentTaskFragment.OnTaskDoneListener,
+        DoneTasksFragment.OnTaskRestoreListener{
 
     FragmentManager fragmentManager;
     PreferencesHelper preferencesHelper;
 
     TabAdapter tabAdapter;
 
-    CurrentTaskFragment currentTaskFragment;
-    DoneTaskFragment doneTaskFragment;
+    TasksFragment currentTaskFragment;
+    TasksFragment doneTasksFragment;
+
+    public DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dbHelper = new DBHelper(getApplicationContext());
 
         PreferencesHelper.getInstance().init(getApplicationContext());
         preferencesHelper = PreferencesHelper.getInstance();
@@ -114,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements AddingDialogTaskF
         });
 
         currentTaskFragment = (CurrentTaskFragment) tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
-        doneTaskFragment = (DoneTaskFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
+        doneTasksFragment = (DoneTasksFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -130,12 +139,23 @@ public class MainActivity extends AppCompatActivity implements AddingDialogTaskF
 
     @Override
     public void onTaskAdded(ModelTask newTask) {
-        currentTaskFragment.addTask(newTask);
+        currentTaskFragment.addTask(newTask, true);
         Toast.makeText(MainActivity.this, "Task added", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onTaskAddingCancel() {
         Toast.makeText(MainActivity.this, "Task adding cancelled", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTaskDone(ModelTask task) {
+        doneTasksFragment.addTask(task,false);
+    }
+
+    @Override
+    public void onTaskRestore(ModelTask task) {
+        currentTaskFragment.addTask(task, false);
+
     }
 }

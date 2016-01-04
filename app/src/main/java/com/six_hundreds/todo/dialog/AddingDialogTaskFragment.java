@@ -11,9 +11,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.six_hundreds.todo.R;
@@ -69,11 +72,31 @@ public class AddingDialogTaskFragment extends DialogFragment {
         final EditText etTime = tilTime.getEditText();
         tilTime.setHint(getResources().getString(R.string.hint_task_time));
 
+        Spinner spPriority = (Spinner) container.findViewById(R.id.spDialogTaskPriority);
+
         builder.setView(container);
 
         final ModelTask task = new ModelTask();
         final Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1);
+
+        ArrayAdapter <String> priorityAdapter  = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item,
+                ModelTask.PRIORITY_LEVELS);
+
+        spPriority.setAdapter(priorityAdapter);
+
+        spPriority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                task.setPriority(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
         if (etDate != null) {
@@ -139,6 +162,7 @@ public class AddingDialogTaskFragment extends DialogFragment {
                 if (etDate.length() !=0 || etTime.length()!= 0){
                     task.setDate(calendar.getTimeInMillis());
                 }
+                task.setStatus(ModelTask.STATUS_CURRENT);
                 addingTaskListener.onTaskAdded(task);
                 dialog.dismiss();
             }

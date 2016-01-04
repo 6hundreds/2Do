@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.six_hundreds.todo.R;
-import com.six_hundreds.todo.adapter.CurrentTasksAdapter;
+import com.six_hundreds.todo.adapter.DoneTasksAdapter;
 import com.six_hundreds.todo.database.DBHelper;
 import com.six_hundreds.todo.model.ModelTask;
 
@@ -23,66 +23,63 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CurrentTaskFragment extends TasksFragment {
+public class DoneTasksFragment extends TasksFragment {
 
 
-    public CurrentTaskFragment() {
+
+    public DoneTasksFragment() {
         // Required empty public constructor
     }
-    OnTaskDoneListener onTaskDoneListener;
 
-    public interface OnTaskDoneListener {
-        void onTaskDone (ModelTask task);
+    OnTaskRestoreListener onTaskRestoreListener;
+
+    public interface OnTaskRestoreListener {
+        void onTaskRestore(ModelTask task);
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
 
-            onTaskDoneListener = (OnTaskDoneListener)  getActivity();
+            onTaskRestoreListener = (OnTaskRestoreListener)  getActivity();
 
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString() + " must implement OnTaskDoneListener");
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_done_task, container, false);
 
-        View rootView = inflater.inflate(R.layout.fragment_current_task, container, false);
-
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvCurrentTasks);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvDoneTasks);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CurrentTasksAdapter(this);
+        adapter = new DoneTasksAdapter(this);
         recyclerView.setAdapter(adapter);
 
         return rootView;
     }
 
-
     @Override
     public void addTaskFromDB() {
         List<ModelTask> tasks = new ArrayList<>();
-        tasks.addAll(activity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS + " OR " + DBHelper.SELECTION_STATUS,
-                 new String[] {Integer.toString(ModelTask.STATUS_CURRENT), Integer.toString(ModelTask.STATUS_OVERDUE)},
-                         DBHelper.COLUMN_TASK_DATE));
+        tasks.addAll(activity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS,
+                new String[] {Integer.toString(ModelTask.STATUS_DONE)},
+                DBHelper.COLUMN_TASK_DATE));
 
         for (int i = 0; i<tasks.size(); i++){
             addTask(tasks.get(i), false);
         }
     }
 
+
     @Override
     public void moveTask(ModelTask task) {
-        onTaskDoneListener.onTaskDone(task);
+        onTaskRestoreListener.onTaskRestore(task);
 
     }
 }
