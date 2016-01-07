@@ -20,10 +20,11 @@ public class ModelTask implements Item {
     public static final int STATUS_DONE = 2;
 
     private String title;
-    private Long date;
+    private long date;
     private int priority;
     private int status;
-    private Long timeStamp;
+    private long timeStamp;
+    private int dateStatus;
 
     public ModelTask() {
         this.status = -1;
@@ -75,7 +76,7 @@ public class ModelTask implements Item {
         this.title = title;
     }
 
-    public Long getDate() {
+    public long getDate() {
         return date;
     }
 
@@ -99,8 +100,16 @@ public class ModelTask implements Item {
         this.status = status;
     }
 
-    public Long getTimeStamp() {
+    public long getTimeStamp() {
         return timeStamp;
+    }
+
+    public int getDateStatus() {
+        return dateStatus;
+    }
+
+    public void setDateStatus(int dateStatus) {
+        this.dateStatus = dateStatus;
     }
 
     @Override

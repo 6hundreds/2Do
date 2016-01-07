@@ -8,6 +8,8 @@
     <string name="current_task_tab">Current</string>
     <string name="done_task_tab">Done</string>
 
+    <string name="dialog_editing_title">Editing task</string>
+
     <string name="dialog_title">Adding task</string>
     <string name="dialog_empty_title_error">Please, enter the title</string>
     
@@ -15,8 +17,16 @@
     <string name="hint_task_date">Date</string>
     <string name="hint_task_time">Time</string>
 
+    <string name="dialog_remove_task">Delete this task?</string>
+    <string name="task_removed">Deleted</string>
+
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+
+    <string name="separator_overdue">Overdue</string>
+    <string name="separator_today">Today</string>
+    <string name="separator_tomorrow">Tomorrow</string>
+    <string name="separator_future">Future</string>
 
 
 </resources>

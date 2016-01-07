@@ -26,7 +26,9 @@ public class DBHelper extends SQLiteOpenHelper {
     private DBQueryManager dbQueryManager;
     private DBUpdateManager dbUpdateManager;
 
-    public static final String SELECTION_STATUS = DBHelper.COLUMN_TASK_STATUS + " = ?";
+    public static final String SELECTION_STATUS = COLUMN_TASK_STATUS + " = ?";
+    public static final String SELECTION_TIME_STAMP = COLUMN_TASK_TIME_STAMP + " = ?";
+    public static final String SELECTION_LIKE_TITLE = COLUMN_TASK_TITLE + " LIKE ?";
 
     private static final String CREATE_TABLE_SCRIPT = "CREATE TABLE " +
             TABLE_NAME + " (" +
@@ -72,5 +74,9 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public DBQueryManager query () {
         return dbQueryManager;
+    }
+
+    public void removeTask(long timeStamp){
+        getWritableDatabase().delete(TABLE_NAME,SELECTION_TIME_STAMP, new String[] {Long.toString(timeStamp)});
     }
 }

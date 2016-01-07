@@ -26,7 +26,6 @@ import java.util.List;
 public class DoneTasksFragment extends TasksFragment {
 
 
-
     public DoneTasksFragment() {
         // Required empty public constructor
     }
@@ -42,10 +41,10 @@ public class DoneTasksFragment extends TasksFragment {
         super.onCreate(savedInstanceState);
         try {
 
-            onTaskRestoreListener = (OnTaskRestoreListener)  getActivity();
+            onTaskRestoreListener = (OnTaskRestoreListener) getActivity();
 
         } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString() + " must implement OnTaskDoneListener");
+            throw new ClassCastException(getActivity().toString() + " must implement OnTaskRestoreListener");
         }
     }
 
@@ -65,13 +64,56 @@ public class DoneTasksFragment extends TasksFragment {
     }
 
     @Override
-    public void addTaskFromDB() {
+    public void findTasks(String title) {
+        adapter.removeAllItems();
         List<ModelTask> tasks = new ArrayList<>();
-        tasks.addAll(activity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS,
-                new String[] {Integer.toString(ModelTask.STATUS_DONE)},
+        tasks.addAll(activity.dbHelper.query().getTasks(DBHelper.SELECTION_LIKE_TITLE + " AND " + DBHelper.SELECTION_STATUS,
+                new String[]{"%" + title + "%", Integer.toString(ModelTask.STATUS_DONE)},
                 DBHelper.COLUMN_TASK_DATE));
 
-        for (int i = 0; i<tasks.size(); i++){
+        for (int i = 0; i < tasks.size(); i++) {
+            addTask(tasks.get(i), false);
+        }
+
+    }
+
+    @Override
+    public void addTask(ModelTask newTask, boolean saveToDB) {
+
+        int position = -1;
+
+        for (int i = 0; i < adapter.getItemCount(); i++) {
+            if (adapter.getItem(i).isTask()) {
+                ModelTask task = (ModelTask) adapter.getItem(i);
+                if (newTask.getDate()<task.getDate()){
+                    position = i;
+                    break;
+
+                }
+            }
+        }
+        if (position != -1 ) {
+            adapter.addItem(position,newTask);
+        }
+        else {
+            adapter.addItem(newTask);
+        }
+
+        if (saveToDB){
+            activity.dbHelper.saveTask(newTask);
+        }
+
+    }
+
+    @Override
+    public void addTaskFromDB() {
+        adapter.removeAllItems();
+        List<ModelTask> tasks = new ArrayList<>();
+        tasks.addAll(activity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS,
+                new String[]{Integer.toString(ModelTask.STATUS_DONE)},
+                DBHelper.COLUMN_TASK_DATE));
+
+        for (int i = 0; i < tasks.size(); i++) {
             addTask(tasks.get(i), false);
         }
     }
@@ -79,6 +121,10 @@ public class DoneTasksFragment extends TasksFragment {
 
     @Override
     public void moveTask(ModelTask task) {
+        if (task.getDate() !=0){
+            alarmHelper.setAlarm(task);
+        }
+
         onTaskRestoreListener.onTaskRestore(task);
 
     }

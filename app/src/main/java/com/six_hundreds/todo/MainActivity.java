@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,16 +19,19 @@ import android.widget.Toast;
 import com.six_hundreds.todo.adapter.TabAdapter;
 import com.six_hundreds.todo.database.DBHelper;
 import com.six_hundreds.todo.dialog.AddingDialogTaskFragment;
+import com.six_hundreds.todo.dialog.EditTaskDialogFragment;
 import com.six_hundreds.todo.fragment.CurrentTaskFragment;
 import com.six_hundreds.todo.fragment.DoneTasksFragment;
 import com.six_hundreds.todo.fragment.SplashFragment;
 import com.six_hundreds.todo.fragment.TasksFragment;
 import com.six_hundreds.todo.model.ModelTask;
+import com.six_hundreds.todo.notification.AlarmHelper;
 
 public class MainActivity extends AppCompatActivity
         implements AddingDialogTaskFragment.AddingTaskListener,
         CurrentTaskFragment.OnTaskDoneListener,
-        DoneTasksFragment.OnTaskRestoreListener{
+        DoneTasksFragment.OnTaskRestoreListener,
+        EditTaskDialogFragment.EditingTaskListener{
 
     FragmentManager fragmentManager;
     PreferencesHelper preferencesHelper;
@@ -37,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     TasksFragment currentTaskFragment;
     TasksFragment doneTasksFragment;
 
+    SearchView searchView;
+
     public DBHelper dbHelper;
 
     @Override
@@ -45,6 +51,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         dbHelper = new DBHelper(getApplicationContext());
+
+        AlarmHelper.getInstance().init(getApplicationContext());
 
         PreferencesHelper.getInstance().init(getApplicationContext());
         preferencesHelper = PreferencesHelper.getInstance();
@@ -56,9 +64,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id =item.getItemId();
+        int id = item.getItemId();
 
-        if (id == R.id.splash_settings){
+        if (id == R.id.splash_settings) {
             item.setChecked(!item.isChecked());
             preferencesHelper.putBoolean(PreferencesHelper.SHOW_SPLASH, item.isChecked());
             return true;
@@ -100,7 +108,7 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addTab(tabLayout.newTab().setText(R.string.done_task_tab));
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        tabAdapter = new TabAdapter(fragmentManager,2);
+        tabAdapter = new TabAdapter(fragmentManager, 2);
 
         viewPager.setAdapter(tabAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -125,6 +133,21 @@ public class MainActivity extends AppCompatActivity
         currentTaskFragment = (CurrentTaskFragment) tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
         doneTasksFragment = (DoneTasksFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
 
+        searchView = (SearchView) findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                currentTaskFragment.findTasks(newText);
+                doneTasksFragment.findTasks(newText);
+                return false;
+            }
+        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +159,17 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
+    }
 
     @Override
     public void onTaskAdded(ModelTask newTask) {
@@ -150,12 +184,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTaskDone(ModelTask task) {
-        doneTasksFragment.addTask(task,false);
+        doneTasksFragment.addTask(task, false);
     }
 
     @Override
     public void onTaskRestore(ModelTask task) {
         currentTaskFragment.addTask(task, false);
 
+    }
+
+    @Override
+    public void onTaskEdited(ModelTask updatedTask) {
+        currentTaskFragment.updateTask(updatedTask);
+        dbHelper.update().task(updatedTask);
     }
 }

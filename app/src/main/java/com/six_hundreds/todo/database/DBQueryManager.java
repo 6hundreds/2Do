@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by six_hundreds on 03.01.16.
  */
-public class DBQueryManager  {
+public class DBQueryManager {
 
     private SQLiteDatabase database;
 
@@ -19,7 +19,28 @@ public class DBQueryManager  {
         this.database = database;
     }
 
-    public List<ModelTask> getTasks (String selection, String[] selectionArgs, String orderBy){
+    public ModelTask getTask(long timeStamp) {
+        ModelTask task = null;
+        Cursor c = database.query(DBHelper.TABLE_NAME, null, DBHelper.SELECTION_TIME_STAMP, new String[]{Long.toString(timeStamp)},
+                null, null, null);
+
+        if (c.moveToFirst()) {
+            String title = c.getString(c.getColumnIndex(DBHelper.COLUMN_TASK_TITLE));
+            long date = c.getLong(c.getColumnIndex(DBHelper.COLUMN_TASK_DATE));
+            int priority = c.getInt(c.getColumnIndex(DBHelper.COLUMN_TASK_PRIORITY));
+            int status = c.getInt(c.getColumnIndex(DBHelper.COLUMN_TASK_STATUS));
+
+            task = new ModelTask(title, date, priority, status, timeStamp);
+
+        }
+        c.close();
+
+        return task;
+
+
+    }
+
+    public List<ModelTask> getTasks(String selection, String[] selectionArgs, String orderBy) {
         List<ModelTask> tasks = new ArrayList<>();
 
         Cursor c = database.query(DBHelper.TABLE_NAME, null, selection, selectionArgs, null, null, orderBy);
@@ -37,9 +58,9 @@ public class DBQueryManager  {
 
             } while (c.moveToNext());
         }
-            c.close();
+        c.close();
 
-            return tasks;
+        return tasks;
 
 
     }
