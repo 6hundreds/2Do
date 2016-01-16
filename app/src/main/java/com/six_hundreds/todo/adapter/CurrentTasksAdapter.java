@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import java.util.logging.LogRecord;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -70,6 +69,7 @@ public class CurrentTasksAdapter extends TaskAdapter {
         Item item = items.get(position);
 
         final Resources resources = holder.itemView.getResources();
+
         if (item.isTask()) {
             holder.itemView.setEnabled(true);
             final ModelTask task = (ModelTask) item;
@@ -82,7 +82,7 @@ public class CurrentTasksAdapter extends TaskAdapter {
             if (task.getDate() != 0) {
                 taskViewHolder.date.setText(Utils.getFullDate(task.getDate()));
             } else {
-                taskViewHolder.date.setText(null);
+                taskViewHolder.date.setText(Utils.getFullDate(Calendar.getInstance().getTimeInMillis())); // в уроке setText (null). Ну хуй знает
             }
 
             itemView.setVisibility(View.VISIBLE);
@@ -151,7 +151,7 @@ public class CurrentTasksAdapter extends TaskAdapter {
                                 ObjectAnimator translationX = ObjectAnimator.ofFloat(itemView, "translationX",
                                         0f, itemView.getWidth());
 
-                                ObjectAnimator translationXBack = ObjectAnimator.ofFloat(itemView, "translaitonXBack",
+                                ObjectAnimator translationXBack = ObjectAnimator.ofFloat(itemView, "translationXBack",
                                         itemView.getWidth(), 0f);
 
                                 translationX.addListener(new Animator.AnimatorListener() {

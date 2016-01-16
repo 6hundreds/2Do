@@ -146,4 +146,5 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
     public TasksFragment getTasksFragment() {
         return tasksFragment;
     }
+
 }

@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">2Do</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="settings_show_splash">Показывать заставку</string>
+
+    <string name="current_task_tab">Текущие</string>
+    <string name="done_task_tab">Выполненные</string>
+
+    <string name="dialog_editing_title">Редактирование</string>
+
+    <string name="dialog_title">Добавление</string>
+    <string name="dialog_empty_title_error">Введите описание</string>
+
+    <string name="hint_task_title">Описание</string>
+    <string name="hint_task_date">Дата</string>
+    <string name="hint_task_time">Время</string>
+
+    <string name="dialog_remove_task">Удалить задачу?</string>
+    <string name="task_removed">Удалено</string>
+
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+
+    <string name="separator_overdue">Просрочено</string>
+    <string name="separator_today">Сегодня</string>
+    <string name="separator_tomorrow">Завтра</string>
+    <string name="separator_future">В будущем</string>
+
+
+    <string name="banner_ad_unit_id">ca-app-pub-5014414034219875/7275622944</string>
+
+
+</resources>

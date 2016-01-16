@@ -1,5 +1,10 @@
 package com.six_hundreds.todo.model;
 
+import android.content.Context;
+import android.content.res.Resources;
+
+import com.six_hundreds.todo.MainActivity;
+import com.six_hundreds.todo.MyApplication;
 import com.six_hundreds.todo.R;
 
 import java.util.Date;
@@ -13,7 +18,7 @@ public class ModelTask implements Item {
     public static final int PRIORITY_NORMAL = 1;
     public static final int PRIORITY_HIGH = 2;
 
-    public static final String[] PRIORITY_LEVELS = {"Low priority", "Normal priority", "High priority"};
+    public static final String [] PRIORITY_LEVELS = {"Low priority","Normal Priority", "High priority"};
 
     public static final int STATUS_OVERDUE = 0;
     public static final int STATUS_CURRENT = 1;
@@ -32,7 +37,7 @@ public class ModelTask implements Item {
 
     }
 
-    public ModelTask(String title, Long date, int priority, int status, Long timeStamp) {
+    public ModelTask(String title, long date, int priority, int status, Long timeStamp) {
         this.title = title;
         this.date = date;
         this.priority = priority;

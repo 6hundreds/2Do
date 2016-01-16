@@ -65,11 +65,11 @@ public class AddingDialogTaskFragment extends DialogFragment {
         final EditText etTitle = tilTitle.getEditText();
         tilTitle.setHint(getResources().getString(R.string.hint_task_title));
 
-        TextInputLayout tilDate = (TextInputLayout) container.findViewById(R.id.tilDialogTaskDate);
+        final TextInputLayout tilDate = (TextInputLayout) container.findViewById(R.id.tilDialogTaskDate);
         final EditText etDate = tilDate.getEditText();
         tilDate.setHint(getResources().getString(R.string.hint_task_date));
 
-        TextInputLayout tilTime = (TextInputLayout) container.findViewById(R.id.tilDialogTaskTime);
+        final TextInputLayout tilTime = (TextInputLayout) container.findViewById(R.id.tilDialogTaskTime);
         final EditText etTime = tilTime.getEditText();
         tilTime.setHint(getResources().getString(R.string.hint_task_time));
 
@@ -78,6 +78,7 @@ public class AddingDialogTaskFragment extends DialogFragment {
         builder.setView(container);
 
         final ModelTask task = new ModelTask();
+
         final Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1);
 
@@ -128,7 +129,6 @@ public class AddingDialogTaskFragment extends DialogFragment {
                 }
             });
 
-            assert etTime != null;
             etTime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -186,10 +186,12 @@ public class AddingDialogTaskFragment extends DialogFragment {
             @Override
             public void onShow(DialogInterface dialog) {
                 final Button positiveButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
-                if (etTitle.length() == 0) {
+                if (etTitle.length() == 0 ) {
                     positiveButton.setEnabled(false);
                     tilTitle.setError(getResources().getString(R.string.dialog_empty_title_error));
                 }
+
+
 
                 etTitle.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -203,8 +205,42 @@ public class AddingDialogTaskFragment extends DialogFragment {
                             positiveButton.setEnabled(false);
                             tilTitle.setError(getResources().getString(R.string.dialog_empty_title_error));
                         } else {
-                            positiveButton.setEnabled(true);
                             tilTitle.setErrorEnabled(false);
+                            etDate.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    if (s.length() != 0){
+                                        etTime.addTextChangedListener(new TextWatcher() {
+                                            @Override
+                                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                            }
+
+                                            @Override
+                                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                if (s.length() != 0){
+                                                    positiveButton.setEnabled(true);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void afterTextChanged(Editable s) {
+
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+
+                                }
+                            });
                         }
 
                     }

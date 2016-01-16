@@ -39,6 +39,7 @@ public class CurrentTaskFragment extends TasksFragment {
     }
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +76,7 @@ public class CurrentTaskFragment extends TasksFragment {
 
         int position = -1;
         ModelSeparator separator = null;
-
+        checkAdapter();
         for (int i = 0; i < adapter.getItemCount(); i++) {
             if (adapter.getItem(i).isTask()) {
                 ModelTask task = (ModelTask) adapter.getItem(i);
@@ -87,29 +88,74 @@ public class CurrentTaskFragment extends TasksFragment {
             }
         }
 
+//        if (newTask.getDate() != 0) {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTimeInMillis(newTask.getDate());
+//
+//            if (calendar.get(Calendar.DAY_OF_YEAR) < Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+//                newTask.setDateStatus(ModelSeparator.TYPE_OVERDUE);
+//                if (!adapter.containsSeparatorOverdue) {
+//                    adapter.containsSeparatorOverdue = true;
+//                    separator = new ModelSeparator(ModelSeparator.TYPE_OVERDUE);
+//                }
+//            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+//                newTask.setDateStatus(ModelSeparator.TYPE_TODAY);
+//                if (!adapter.containsSeparatorToday) {
+//                    adapter.containsSeparatorToday = true;
+//                    separator = new ModelSeparator(ModelSeparator.TYPE_TODAY);
+//                }
+//            } else if (calendar.get(Calendar.DAY_OF_YEAR) == (Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1)) {
+//                newTask.setDateStatus(ModelSeparator.TYPE_TOMORROW);
+//                if (!adapter.containsSeparatorTomorrow) {
+//                    adapter.containsSeparatorTomorrow = true;
+//                    separator = new ModelSeparator(ModelSeparator.TYPE_TOMORROW);
+//                }
+//            } else if (calendar.get(Calendar.DAY_OF_YEAR) > (Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1)) {
+//                newTask.setDateStatus(ModelSeparator.TYPE_FUTURE);
+//                if (!adapter.containsSeparatorFuture) {
+//                    adapter.containsSeparatorFuture = true;
+//                    separator = new ModelSeparator(ModelSeparator.TYPE_FUTURE);
+//                }
+//            }
+//        }
         if (newTask.getDate() != 0) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(newTask.getDate());
-
-            if (calendar.get(Calendar.DAY_OF_YEAR) < Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+            if (calendar.get(Calendar.YEAR) < Calendar.getInstance().get(Calendar.YEAR)) {
                 newTask.setDateStatus(ModelSeparator.TYPE_OVERDUE);
                 if (!adapter.containsSeparatorOverdue) {
                     adapter.containsSeparatorOverdue = true;
                     separator = new ModelSeparator(ModelSeparator.TYPE_OVERDUE);
                 }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+            } else if (calendar.get(Calendar.YEAR) > Calendar.getInstance().get(Calendar.YEAR)) {
+                newTask.setDateStatus(ModelSeparator.TYPE_FUTURE);
+                if (!adapter.containsSeparatorFuture) {
+                    adapter.containsSeparatorFuture = true;
+                    separator = new ModelSeparator(ModelSeparator.TYPE_FUTURE);
+                }
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) < Calendar.getInstance().get(Calendar.DAY_OF_YEAR) &&
+                    calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
+                newTask.setDateStatus(ModelSeparator.TYPE_OVERDUE);
+                if (!adapter.containsSeparatorOverdue) {
+                    adapter.containsSeparatorOverdue = true;
+                    separator = new ModelSeparator(ModelSeparator.TYPE_OVERDUE);
+                }
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) &&
+                    calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
                 newTask.setDateStatus(ModelSeparator.TYPE_TODAY);
                 if (!adapter.containsSeparatorToday) {
                     adapter.containsSeparatorToday = true;
                     separator = new ModelSeparator(ModelSeparator.TYPE_TODAY);
                 }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1) {
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1 &&
+                    calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
                 newTask.setDateStatus(ModelSeparator.TYPE_TOMORROW);
                 if (!adapter.containsSeparatorTomorrow) {
                     adapter.containsSeparatorTomorrow = true;
                     separator = new ModelSeparator(ModelSeparator.TYPE_TOMORROW);
                 }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) > Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1) {
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) > Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1 &&
+                    calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
                 newTask.setDateStatus(ModelSeparator.TYPE_FUTURE);
                 if (!adapter.containsSeparatorFuture) {
                     adapter.containsSeparatorFuture = true;
@@ -117,7 +163,6 @@ public class CurrentTaskFragment extends TasksFragment {
                 }
             }
         }
-
 
         if (position != -1) {
 
@@ -127,17 +172,17 @@ public class CurrentTaskFragment extends TasksFragment {
                     if (task.getDateStatus() == newTask.getDateStatus()) {
                         position -= 1;
                     }
-                } else if (position - 2 <0 && newTask.getDate()==0){
-                    position-=1;
+                } else if (position - 2 < 0 && newTask.getDate() == 0) {
+                    position -= 1;
 
                 }
             }
-            if (separator !=null){
-                adapter.addItem(position -1,separator);
+            if (separator != null) {
+                adapter.addItem(position - 1, separator);
             }
             adapter.addItem(position, newTask);
         } else {
-            if (separator !=null){
+            if (separator != null) {
                 adapter.addItem(separator);
             }
             adapter.addItem(newTask);
@@ -151,6 +196,7 @@ public class CurrentTaskFragment extends TasksFragment {
 
     @Override
     public void findTasks(String title) {
+        checkAdapter();
         adapter.removeAllItems();
         List<ModelTask> tasks = new ArrayList<>();
         tasks.addAll(activity.dbHelper.query().getTasks(DBHelper.SELECTION_LIKE_TITLE + " AND " +
@@ -167,6 +213,7 @@ public class CurrentTaskFragment extends TasksFragment {
 
     @Override
     public void addTaskFromDB() {
+        checkAdapter();
         adapter.removeAllItems();
         List<ModelTask> tasks = new ArrayList<>();
         tasks.addAll(activity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS + " OR " + DBHelper.SELECTION_STATUS,
@@ -183,5 +230,14 @@ public class CurrentTaskFragment extends TasksFragment {
         alarmHelper.removeAlarm(task.getTimeStamp());
         onTaskDoneListener.onTaskDone(task);
 
+    }
+
+// !!!
+    @Override
+    public void checkAdapter() {
+        if (adapter == null) {
+            adapter = new CurrentTasksAdapter(this);
+            addTaskFromDB();
+        }
     }
 }

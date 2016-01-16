@@ -2,6 +2,8 @@ package com.six_hundreds.todo;
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity
         DoneTasksFragment.OnTaskRestoreListener,
         EditTaskDialogFragment.EditingTaskListener{
 
+
+
     FragmentManager fragmentManager;
     PreferencesHelper preferencesHelper;
 
@@ -50,6 +54,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Ads.showBanner(this);
+
         dbHelper = new DBHelper(getApplicationContext());
 
         AlarmHelper.getInstance().init(getApplicationContext());
@@ -60,6 +66,11 @@ public class MainActivity extends AppCompatActivity
         runSplash();
 
         setUI();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        // чтобы приложение не крашилось после нажатия кнопки Назад
     }
 
     @Override
@@ -197,5 +208,15 @@ public class MainActivity extends AppCompatActivity
     public void onTaskEdited(ModelTask updatedTask) {
         currentTaskFragment.updateTask(updatedTask);
         dbHelper.update().task(updatedTask);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+        } else {
+            super.onBackPressed();
+        }
+
     }
 }

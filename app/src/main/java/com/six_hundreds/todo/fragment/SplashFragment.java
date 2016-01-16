@@ -19,9 +19,11 @@ import java.util.concurrent.TimeUnit;
 public class SplashFragment extends Fragment {
 
 
+
     public SplashFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
