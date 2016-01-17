@@ -112,7 +112,7 @@ public class DoneTasksAdapter extends TaskAdapter{
                                 ObjectAnimator translationX = ObjectAnimator.ofFloat(itemView, "translationX",
                                         0f, -itemView.getWidth());
 
-                                ObjectAnimator translationXBack = ObjectAnimator.ofFloat(itemView, "translationXBack",
+                                ObjectAnimator translationXBack = ObjectAnimator.ofFloat(itemView, "translationX",
                                         -itemView.getWidth(), 0f);
 
                                 translationX.addListener(new Animator.AnimatorListener() {

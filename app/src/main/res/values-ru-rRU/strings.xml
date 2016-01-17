@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">2Do</string>
 
+    <string-array name="priority_levels">
+        <item>Низкий приоритет</item>
+        <item>Нормальный приоритет</item>
+        <item>Высокий приоритет</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings_show_splash">Показывать заставку</string>
@@ -11,9 +17,9 @@
     <string name="dialog_editing_title">Редактирование</string>
 
     <string name="dialog_title">Добавление</string>
-    <string name="dialog_empty_title_error">Введите описание</string>
+    <string name="dialog_empty_title_error">Заполните это поле</string>
 
-    <string name="hint_task_title">Описание</string>
+    <string name="hint_task_title">Задача</string>
     <string name="hint_task_date">Дата</string>
     <string name="hint_task_time">Время</string>
 

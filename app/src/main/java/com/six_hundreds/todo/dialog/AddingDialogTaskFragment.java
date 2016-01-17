@@ -83,7 +83,7 @@ public class AddingDialogTaskFragment extends DialogFragment {
         calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1);
 
         ArrayAdapter <String> priorityAdapter  = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item,
-                ModelTask.PRIORITY_LEVELS);
+                getResources().getStringArray(R.array.priority_levels));
 
         spPriority.setAdapter(priorityAdapter);
 
